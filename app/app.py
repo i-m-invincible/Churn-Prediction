@@ -4,7 +4,7 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 import contextlib
-
+import numpy
 
 def card():
     """Fallback for older Streamlit without st.container(border=True)."""
