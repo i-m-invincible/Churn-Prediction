@@ -1,0 +1,64 @@
+{
+  "partition": "training only",
+  "customers": 5634,
+  "churn_count": 1495,
+  "churn_rate": 0.2653532126375577,
+  "missing": {
+    "tenure": 0,
+    "MonthlyCharges": 0,
+    "TotalCharges": 8,
+    "gender": 0,
+    "SeniorCitizen": 0,
+    "Partner": 0,
+    "Dependents": 0,
+    "PhoneService": 0,
+    "MultipleLines": 0,
+    "InternetService": 0,
+    "OnlineSecurity": 0,
+    "OnlineBackup": 0,
+    "DeviceProtection": 0,
+    "TechSupport": 0,
+    "StreamingTV": 0,
+    "StreamingMovies": 0,
+    "Contract": 0,
+    "PaperlessBilling": 0,
+    "PaymentMethod": 0
+  },
+  "numeric_summary": {
+    "tenure": {
+      "count": 5634.0,
+      "mean": 32.48509052183174,
+      "std": 24.56874351182127,
+      "min": 0.0,
+      "25%": 9.0,
+      "50%": 29.0,
+      "75%": 55.0,
+      "max": 72.0
+    },
+    "MonthlyCharges": {
+      "count": 5634.0,
+      "mean": 64.92996095136671,
+      "std": 30.138105357938493,
+      "min": 18.4,
+      "25%": 35.6625,
+      "50%": 70.5,
+      "75%": 90.0,
+      "max": 118.75
+    },
+    "TotalCharges": {
+      "count": 5626.0,
+      "mean": 2302.6042659082827,
+      "std": 2279.1731756466274,
+      "min": 18.85,
+      "25%": 407.275,
+      "50%": 1398.125,
+      "75%": 3838.6125,
+      "max": 8684.8
+    }
+  },
+  "contract_churn_rates": {
+    "Month-to-month": 0.4274661508704062,
+    "One year": 0.11082693947144075,
+    "Two year": 0.02869757174392936
+  }
+}
