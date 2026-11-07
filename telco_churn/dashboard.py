@@ -90,7 +90,7 @@ def customer_form(bundle):
     st.caption("Try an example or enter a customer's account details.")
     example_columns = st.columns(2)
     for column, name in zip(example_columns, EXAMPLES, strict=True):
-        column.button(name, on_click=apply_example, args=(name,), use_container_width=True)
+        column.button(name, on_click=apply_example, args=(name,), width="stretch")
     a, b = st.columns(2)
     phone = a.selectbox("Phone service", ["Yes", "No"], key="customer_PhoneService")
     internet = b.selectbox(
@@ -165,7 +165,7 @@ def customer_form(bundle):
             )
             raw["Partner"] = a.selectbox("Partner", ["No", "Yes"], key="customer_Partner")
             raw["Dependents"] = b.selectbox("Dependents", ["No", "Yes"], key="customer_Dependents")
-        submitted = st.form_submit_button("Predict churn", type="primary", use_container_width=True)
+        submitted = st.form_submit_button("Predict churn", type="primary", width="stretch")
     if submitted:
         if unknown:
             raw["TotalCharges"] = None
@@ -230,7 +230,7 @@ def risk_assessment(bundle):
             .properties(height=180)
         )
         zero = alt.Chart(pd.DataFrame({"zero": [0]})).mark_rule(color="#A8B4BC").encode(x="zero:Q")
-        st.altair_chart((chart + zero).configure_view(stroke=None), use_container_width=True)
+        st.altair_chart((chart + zero).configure_view(stroke=None), width="stretch")
     st.caption(
         "Positive bars mean higher estimated risk than the reference value. Each factor group "
         "is replaced separately; differences do not add up and do not establish causes."
@@ -247,7 +247,7 @@ def risk_assessment(bundle):
                 }
             ),
             hide_index=True,
-            use_container_width=True,
+            width="stretch",
         )
         st.json(snapshot, expanded=False)
         st.caption(f"Inference uses the saved {bundle.metadata['selected_model']} pipeline.")
@@ -282,7 +282,7 @@ def batch_predictions(bundle):
             st.dataframe(
                 output,
                 hide_index=True,
-                use_container_width=True,
+                width="stretch",
                 column_config={
                     "churn_probability": st.column_config.ProgressColumn(
                         "Churn probability", min_value=0, max_value=1, format="percent"
@@ -344,12 +344,12 @@ def explore_workspace(frame):
             ["Contract", "InternetService", "PaymentMethod", "SeniorCitizen", "TechSupport"],
         )
         chart, rates = group_chart(frame, feature)
-        st.altair_chart(chart, use_container_width=True)
+        st.altair_chart(chart, width="stretch")
         with st.expander("View the underlying counts"):
             st.dataframe(
                 rates.rename(columns={"mean": "Churn rate", "count": "Customers"}),
                 hide_index=True,
-                use_container_width=True,
+                width="stretch",
             )
     with st.expander("Tenure, target balance and numeric correlations"):
         st.image(str(REPORT_DIR / "figures" / "eda_overview.png"))
@@ -382,7 +382,7 @@ def performance_workspace(bundle, metrics, importance):
             {column: "{:.4f}" for column in rows[0] if column != "Model"}
         ),
         hide_index=True,
-        use_container_width=True,
+        width="stretch",
     )
     st.caption(
         "Precision, recall and F1 refer to Churn = 1, with a fixed 50% classification threshold."
@@ -413,7 +413,7 @@ def performance_workspace(bundle, metrics, importance):
                 .properties(height=280)
                 .configure_view(stroke=None)
             )
-            st.altair_chart(chart, use_container_width=True)
+            st.altair_chart(chart, width="stretch")
             st.caption(
                 "Five shuffled repeats, inspected after selection. "
                 "Correlated inputs can share importance."

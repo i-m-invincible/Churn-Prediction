@@ -75,12 +75,16 @@ def update_readme(results: dict, path: Path) -> None:
     if not path.exists():
         return
     start, end = "<!-- RESULTS:START -->", "<!-- RESULTS:END -->"
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     if start not in text or end not in text:
         raise ValueError("README requires results markers for automatic metric updates.")
     before, rest = text.split(start, 1)
     _, after = rest.split(end, 1)
-    path.write_text(before + start + "\n" + comparison_markdown(results) + "\n" + end + after)
+    path.write_text(
+        before + start + "\n" + comparison_markdown(results) + "\n" + end + after,
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def train(
@@ -214,8 +218,12 @@ def train(
     (artifact_dir / "metadata.json").write_text(
         json.dumps(metadata, indent=2) + "\n", encoding="utf-8", newline="\n"
     )
-    (report_dir / "metrics.json").write_text(json.dumps(results, indent=2) + "\n")
-    (report_dir / "model_comparison.md").write_text(comparison_markdown(results) + "\n")
+    (report_dir / "metrics.json").write_text(
+        json.dumps(results, indent=2) + "\n", encoding="utf-8", newline="\n"
+    )
+    (report_dir / "model_comparison.md").write_text(
+        comparison_markdown(results) + "\n", encoding="utf-8", newline="\n"
+    )
     manifest = pd.DataFrame({"customerID": ids, "partition": "train"})
     manifest.loc[test_idx, "partition"] = "test"
     manifest.to_csv(report_dir / "split_manifest.csv", index=False)
