@@ -1,9 +1,19 @@
 [theme]
+base = "light"
 primaryColor = "#167D8D"
-backgroundColor = "#F7FAFC"
-secondaryBackgroundColor = "#EAF1F5"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F2F6F8"
 textColor = "#162E40"
 font = "sans serif"
+
+[client]
+showErrorDetails = "none"
+
+[server]
+headless = true
+maxUploadSize = 5
+enableXsrfProtection = true
+enableCORS = true
 
 [browser]
 gatherUsageStats = false

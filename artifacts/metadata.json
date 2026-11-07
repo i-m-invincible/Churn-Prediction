@@ -119,5 +119,6 @@
     "preprocessor.joblib": "f7aab91515bb22ad6f864c6ae49b144a6f71a16e24c01ec05d475f9a7754d458",
     "model.joblib": "016755fdadaf26d22708fc1856c86f93fb1c71d5c44b48c98d849d6cf6901c6f",
     "reference_customer.json": "36a25c0dfb225fe6ad7f06a132ce8c1c0ff985fcc434a06a254eb0f9f10d656f"
-  }
+  },
+  "artifact_hash_policy": "sha256; reference JSON CRLF normalized to LF; model binaries exact"
 }

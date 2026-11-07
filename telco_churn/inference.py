@@ -1,7 +1,5 @@
 """Verified artifact loading, batch scoring and model-based local comparisons."""
 
-import hashlib
-import importlib.metadata
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,12 +9,10 @@ import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
 
+from telco_churn.artifacts import ARTIFACT_FILES, artifact_sha256, package_version
+from telco_churn.artifacts import sha256 as sha256
 from telco_churn.data import prepare_features
 from telco_churn.schema import ARTIFACT_DIR, EXPLANATION_GROUPS
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 @dataclass
@@ -29,25 +25,27 @@ class ModelBundle:
 def load_bundle(directory: Path | str = ARTIFACT_DIR) -> ModelBundle:
     """Load only the repository's trusted files; never accept uploaded joblib files."""
     directory = Path(directory)
-    metadata = json.loads((directory / "metadata.json").read_text())
+    metadata = json.loads((directory / "metadata.json").read_text(encoding="utf-8"))
     if metadata.get("artifact_schema_version") != 1:
         raise ValueError("Unsupported artifact schema. Regenerate artifacts.")
     for package in ["scikit-learn", "xgboost"]:
-        if importlib.metadata.version(package) != metadata["versions"][package]:
+        if package_version(package) != metadata["versions"][package]:
             raise ValueError(f"{package} version differs from training. Install requirements.txt.")
-    for filename in [
-        "churn_pipeline.joblib",
-        "preprocessor.joblib",
-        "model.joblib",
-        "reference_customer.json",
-    ]:
+    for filename in ARTIFACT_FILES:
         path = directory / filename
-        if sha256(path) != metadata["artifact_sha256"][filename]:
+        if artifact_sha256(path) != metadata["artifact_sha256"][filename]:
             raise ValueError(f"Artifact checksum mismatch: {filename}. Regenerate artifacts.")
     pipeline = joblib.load(directory / "churn_pipeline.joblib")
     reference = prepare_features(
-        pd.DataFrame([json.loads((directory / "reference_customer.json").read_text())])
+        pd.DataFrame(
+            [json.loads((directory / "reference_customer.json").read_text(encoding="utf-8"))]
+        )
     )
+    if metadata["features"] != pipeline.feature_names_in_.tolist():
+        raise ValueError("Artifact input schema differs from metadata.")
+    encoded = pipeline["preprocess"].get_feature_names_out().tolist()
+    if encoded != metadata["encoded_features"]:
+        raise ValueError("Artifact preprocessing schema differs from metadata.")
     return ModelBundle(pipeline=pipeline, metadata=metadata, reference=reference)
 
 
