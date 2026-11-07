@@ -2,8 +2,10 @@ numpy==2.3.5
 pandas==2.2.3
 scipy==1.17.0
 scikit-learn==1.8.0
-xgboost==3.1.2
+xgboost-cpu==3.1.2; sys_platform == "linux" and platform_machine == "x86_64"
+xgboost==3.1.2; sys_platform != "linux" or platform_machine != "x86_64"
 streamlit==1.51.0
+altair==5.5.0
 matplotlib==3.10.8
 seaborn==0.13.2
 joblib==1.5.3

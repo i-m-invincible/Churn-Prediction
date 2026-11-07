@@ -90,7 +90,7 @@ def test_explanations_are_actual_model_probability_comparisons(bundle, dataset):
 
 
 def test_published_metrics_and_selection_are_reproducible(bundle, dataset):
-    metrics = json.loads((REPORT_DIR / "metrics.json").read_text())
+    metrics = json.loads((REPORT_DIR / "metrics.json").read_text(encoding="utf-8"))
     predictions = pd.read_csv(REPORT_DIR / "test_predictions.csv")
     features, target, ids = dataset
     test_ids = predictions.customerID.tolist()
@@ -112,7 +112,7 @@ def test_published_metrics_and_selection_are_reproducible(bundle, dataset):
         for metric, value in actual.items():
             assert item["test"][metric] == pytest.approx(value, abs=1e-8)
         assert len(item["cv"]["roc_auc_folds"]) == 5
-    assert comparison_markdown(metrics) in (ROOT / "README.md").read_text()
+    assert comparison_markdown(metrics) in (ROOT / "README.md").read_text(encoding="utf-8")
     assert metrics["dataset_sha256"] == sha256(DATA_PATH)
     assert metrics["train_customers"] + metrics["test_customers"] == len(features)
 

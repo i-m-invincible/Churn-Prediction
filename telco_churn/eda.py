@@ -25,7 +25,9 @@ def write_eda(features: pd.DataFrame, target: pd.Series, directory: Path) -> dic
         "numeric_summary": features[NUMERIC_FEATURES].describe().to_dict(),
         "contract_churn_rates": frame.groupby("Contract")["Churn"].mean().to_dict(),
     }
-    (directory.parent / "eda_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+    (directory.parent / "eda_summary.json").write_text(
+        json.dumps(summary, indent=2) + "\n", encoding="utf-8", newline="\n"
+    )
     sns.set_theme(style="whitegrid", palette="colorblind")
     fig, axes = plt.subplots(1, 3, figsize=(15, 4), layout="constrained")
     sns.countplot(data=frame, x="Churn", ax=axes[0], color="#167D8D")

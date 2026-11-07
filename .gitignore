@@ -8,3 +8,6 @@ build/
 dist/
 .DS_Store
 .streamlit/secrets.toml
+.env
+.env.*
+!.env.example

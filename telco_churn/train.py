@@ -1,7 +1,6 @@
 """Reproducible model comparison. Run with python -m telco_churn.train."""
 
 import argparse
-import importlib.metadata
 import json
 import platform
 from datetime import UTC, datetime
@@ -19,10 +18,16 @@ from sklearn.inspection import permutation_importance
 from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay
 from sklearn.model_selection import StratifiedKFold, cross_validate, train_test_split
 
+from telco_churn.artifacts import (
+    ARTIFACT_FILES,
+    HASH_POLICY,
+    artifact_sha256,
+    package_version,
+    sha256,
+)
 from telco_churn.data import load_dataset
 from telco_churn.eda import write_eda
 from telco_churn.evaluation import evaluate
-from telco_churn.inference import sha256
 from telco_churn.modeling import build_candidates
 from telco_churn.schema import (
     ARTIFACT_DIR,
@@ -70,12 +75,16 @@ def update_readme(results: dict, path: Path) -> None:
     if not path.exists():
         return
     start, end = "<!-- RESULTS:START -->", "<!-- RESULTS:END -->"
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     if start not in text or end not in text:
         raise ValueError("README requires results markers for automatic metric updates.")
     before, rest = text.split(start, 1)
     _, after = rest.split(end, 1)
-    path.write_text(before + start + "\n" + comparison_markdown(results) + "\n" + end + after)
+    path.write_text(
+        before + start + "\n" + comparison_markdown(results) + "\n" + end + after,
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def train(
@@ -171,7 +180,9 @@ def train(
     joblib.dump(pipeline["preprocess"], artifact_dir / "preprocessor.joblib", compress=3)
     joblib.dump(pipeline["model"], artifact_dir / "model.joblib", compress=3)
     (artifact_dir / "reference_customer.json").write_text(
-        json.dumps(reference_customer(x_train), indent=2) + "\n"
+        json.dumps(reference_customer(x_train), indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
     )
     packages = [
         "numpy",
@@ -194,26 +205,25 @@ def train(
         "encoded_features": pipeline["preprocess"].get_feature_names_out().tolist(),
         "dataset_sha256": results["dataset_sha256"],
         "python_version": platform.python_version(),
-        "versions": {p: importlib.metadata.version(p) for p in packages},
+        "versions": {p: package_version(p) for p in packages},
         "train_customers": len(x_train),
         "test_customers": len(x_test),
         "seed": seed,
         "cv_folds": folds,
         "selection_rule": results["selection_rule"],
         "selected_test_metrics": results["models"][selected]["test"],
-        "artifact_sha256": {
-            name: sha256(artifact_dir / name)
-            for name in [
-                "churn_pipeline.joblib",
-                "preprocessor.joblib",
-                "model.joblib",
-                "reference_customer.json",
-            ]
-        },
+        "artifact_hash_policy": HASH_POLICY,
+        "artifact_sha256": {name: artifact_sha256(artifact_dir / name) for name in ARTIFACT_FILES},
     }
-    (artifact_dir / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    (report_dir / "metrics.json").write_text(json.dumps(results, indent=2) + "\n")
-    (report_dir / "model_comparison.md").write_text(comparison_markdown(results) + "\n")
+    (artifact_dir / "metadata.json").write_text(
+        json.dumps(metadata, indent=2) + "\n", encoding="utf-8", newline="\n"
+    )
+    (report_dir / "metrics.json").write_text(
+        json.dumps(results, indent=2) + "\n", encoding="utf-8", newline="\n"
+    )
+    (report_dir / "model_comparison.md").write_text(
+        comparison_markdown(results) + "\n", encoding="utf-8", newline="\n"
+    )
     manifest = pd.DataFrame({"customerID": ids, "partition": "train"})
     manifest.loc[test_idx, "partition"] = "test"
     manifest.to_csv(report_dir / "split_manifest.csv", index=False)
