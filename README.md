@@ -2,7 +2,11 @@
 
 An explainable customer churn dashboard: assess one customer, score a CSV, and inspect the evidence behind the model.
 
-[GitHub repository](https://github.com/i-m-invincible/Churn-Prediction) · [Deployment guide](docs/deployment.md)
+**[Live Demo](https://churn-atlas-bishal.streamlit.app/)** · [GitHub repository](https://github.com/i-m-invincible/Churn-Prediction) · [Deployment guide](docs/deployment.md)
+
+Public on free Streamlit Community Cloud. No sign-in is required; an inactive app may take a moment to wake up.
+
+![Churn Atlas: customer profile, churn probability, risk category and model-based factor chart](docs/dashboard.jpg)
 
 ## Explore the application
 

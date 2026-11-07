@@ -1,5 +1,18 @@
 # Streamlit Community Cloud deployment
 
+## Current public application
+
+**[Open Churn Atlas](https://churn-atlas-bishal.streamlit.app/)**
+
+Hosted on the free Community Cloud tier from `main` / `app.py`, using Python 3.12
+selected in Advanced settings. No secrets or paid services are configured.
+
+Browser checks on 7 November 2026 covered signed-out access, example and custom
+predictions, missing total charges, dependent service inputs, interactive EDA,
+evaluation graphics, CSV upload/download and friendly invalid-input messages.
+The downloaded three-customer example produced probabilities of approximately
+69.89%, 3.02% and 32.93%, matching the saved model.
+
 ## Deploy
 
 1. Sign in at https://share.streamlit.io/ and connect the GitHub account that owns the repository.
