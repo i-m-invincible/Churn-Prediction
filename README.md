@@ -112,6 +112,4 @@ Linux x86_64 uses the matching CPU-only XGBoost wheel. Caches are bounded, uploa
 
 Developed with AI assistance for implementation, debugging and documentation.
 
-This project was inspired by the Customer Churn Prediction project developed by Ibrahim Khan (ibrahimkhan-data). The implementation in this repository was independently developed, with inspiration drawn from the original project's concept and approach.
-
-[Original project](https://github.com/ibrahimkhan-data/Customer-Churn-Prediction) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [MIT license for application code](LICENSE)
+[Third-party notices](THIRD_PARTY_NOTICES.md) · [MIT license for application code](LICENSE)
